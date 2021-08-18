@@ -3,41 +3,41 @@ package com.example.rcp.domain;
 import lombok.*;
 
 @Data
-@ToString(exclude = {"password"})
+@ToString(exclude = {"memberPassword"})
 public class Members {
 	
-	/** 社員番号 */
-	private int id;
+
+	private int memberId;
 	
 	/** 名前 */
-	private String name;
+	private String memberName;
 	
 	/** 名前（ひらがな） */
-	private String nameHiragana;
+	private String memberNameHiragana;
 	
 	/** 部署名 */
-	private String part;
+	private String memberPart;
 	
 	/** 部署名（ひらがな） */
-	private String partHiragana;
+	private String memberPartHiragana;
 	
 	/** 内線番号 */
-	private String tel;
+	private String memberTel;
 	
 	/** emailアドレス*/
-	private String email;
+	private String memberEmail;
 	
 	/** パスワード */
-	private String password;
+	private String memberPassword;
 	
 	/** 権限 */
-	private Role auth;
+	private short memberAuth;
 	
 	/** 登録日 */
-	private String regDate;
+	private String memberRegDate;
 	
 	/** 修正日 */
-	private String modDate;
+	private String memberModDate;
 	
 
 }

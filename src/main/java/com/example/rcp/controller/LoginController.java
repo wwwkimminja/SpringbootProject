@@ -1,22 +1,22 @@
 package com.example.rcp.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+
+import com.example.rcp.domain.Members;
+
 
 @Controller
-@RequestMapping("/members")
 public class LoginController {
-	
 	
 
 	@GetMapping("/")
-	public String loginForm() {
-		return "login";
+	public String loginForm(Model model) {
+		model.addAttribute("member", new Members());
+		return "loginForm";
 	}
 
-	
 	
 
 }

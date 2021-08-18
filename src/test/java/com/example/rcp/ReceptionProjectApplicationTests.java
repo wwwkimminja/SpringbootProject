@@ -50,7 +50,7 @@ class ReceptionProjectApplicationTests {
 
 		Members member = mapper.getLoginInfo("naruse@abc.ne.jp", "11111111");
 		System.out.println("Member >>" + member);
-		assertEquals("成瀬 太一", member.getName());
+		assertEquals("成瀬 太一", member.getMemberName());
 
 	}
 
