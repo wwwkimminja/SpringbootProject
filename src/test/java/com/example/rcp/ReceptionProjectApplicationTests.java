@@ -48,7 +48,7 @@ class ReceptionProjectApplicationTests {
 	public void testMemberMapper() throws Exception {
 
 
-		Members member = mapper.getLoginInfo("naruse@abc.ne.jp", "11111111");
+		Members member = mapper.findByEmail("naruse@abc.ne.jp");
 		System.out.println("Member >>" + member);
 		assertEquals("成瀬 太一", member.getMemberName());
 

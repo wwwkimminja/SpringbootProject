@@ -3,8 +3,8 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.rcp.mapper.MembersMapper">
-	<select id="getLoginInfo" parameterType = "String" resultType="com.example.rcp.domain.Members">
-	SELECT * FROM members WHERE member_email = #{email} and member_password = #{password}
+	<select id="findByEmail" parameterType = "String" resultType="com.example.rcp.domain.Members">
+	SELECT * FROM members WHERE member_email = #{email}
 	</select>
 </mapper>
     

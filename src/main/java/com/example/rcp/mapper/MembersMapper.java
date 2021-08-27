@@ -10,7 +10,8 @@ import com.example.rcp.domain.Members;
 public interface MembersMapper {
 	
 	
-	public Members getLoginInfo(@Param("email") String email, @Param("password") String password) throws Exception;
+
+	public Members findByEmail(@Param("email") String email) throws Exception;
 	
 
 
