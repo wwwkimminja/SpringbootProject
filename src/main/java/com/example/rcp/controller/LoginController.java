@@ -33,20 +33,24 @@ public class LoginController {
 	}
 	
 	@PostMapping("/login")
-	public String login(@ModelAttribute Members member,BindingResult bindingResult) throws Exception {
+	public String login(@ModelAttribute("member") Members member,BindingResult bindingResult) throws Exception {
 		
-		log.info("memberEmail={}",member.getMemberEmail());
-		//Members loginMember = loginService.login(member.getMemberEmail(),member.getMemberPassword());
+		log.info("memberEmail={}", member.getMemberEmail());
 		
-		//if(loginMember == null) {
-		//	bindingResult.reject("loginFail","");
-			
-		 
+		Members loginMember = loginService.login(member.getMemberEmail(),member.getMemberPassword());
+		
+		if(loginMember == null) {
+			bindingResult.reject("loginFail",""
+					+ "incorrect email or password");
+			return "loginForm";
+					 
+		}
 		
 		return "home";
 		
 		
 	}
+	
 
 	
 

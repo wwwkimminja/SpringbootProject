@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.example.rcp.domain.Members;
 import com.example.rcp.mapper.MembersMapper;
+import com.example.rcp.service.LoginService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -27,6 +28,23 @@ class ReceptionProjectApplicationTests {
 
 	@Autowired
 	private MembersMapper mapper;
+	
+	@Autowired
+	private LoginService service;
+	
+	/**
+	 * 
+	 * login情報が正しく無い時
+	 */
+	@Test
+	public void testLogin() throws Exception{
+		
+		Members member =  service.login("naruse@abc.ne.jp", "11110000");
+		System.out.println("member>>"+member);
+		assertEquals(null,member);
+
+		
+	}
 
 	@Ignore
 	@Test
@@ -44,6 +62,7 @@ class ReceptionProjectApplicationTests {
 		}
 	}
 
+	@Ignore
 	@Test
 	public void testMemberMapper() throws Exception {
 

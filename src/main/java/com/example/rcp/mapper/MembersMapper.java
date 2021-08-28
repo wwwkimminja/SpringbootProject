@@ -12,6 +12,8 @@ public interface MembersMapper {
 	
 
 	public Members findByEmail(@Param("email") String email) throws Exception;
+
+	public Members findById(@Param("id")int memberId) throws Exception;
 	
 
 
