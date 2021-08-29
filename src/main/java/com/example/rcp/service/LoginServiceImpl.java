@@ -20,8 +20,9 @@ public class LoginServiceImpl implements LoginService{
 		@Override
 		public Members login(String email, String password) throws Exception {
 			Members member = membersMapper.findByEmail(email);
-			
-			if (member.getMemberPassword().equals(password)) {
+			if(member == null) {
+				return null;
+			}else if (member.getMemberPassword().equals(password)) {
 				return member;
 			}else {
 				return null;
