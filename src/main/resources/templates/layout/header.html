@@ -65,8 +65,9 @@
         </li>
       </ul>
       <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
+       <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
+       
+        <button class="btn btn-outline-success" onclick="location.href='loginForm.html'" th:onclick="|location.href='@{/login}'|" type="button">login</button>
       </form>
     </div>
   </div>

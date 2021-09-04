@@ -4,9 +4,11 @@
 
   <body>
 
-<div id="navbar" th:replace="~{layout/header :: navbar }"></div>
+<div id="navbar" th:replace="~{layout/logoutHeader :: navbar }"></div>
 
-Home
+Login home
+
+<h3 th:text="|login:${member.memberName}|"> member's name</h3>
 
       
   </body>   

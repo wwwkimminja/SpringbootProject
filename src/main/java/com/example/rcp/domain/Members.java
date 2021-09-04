@@ -7,7 +7,7 @@ import lombok.*;
 public class Members {
 	
 
-	private int memberId;
+	private Integer memberId;
 	
 	/** 名前 */
 	private String memberName;
