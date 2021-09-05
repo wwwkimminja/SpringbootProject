@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.example.rcp.domain.LoginMember;
 import com.example.rcp.domain.Members;
 import com.example.rcp.mapper.MembersMapper;
 import com.example.rcp.service.LoginService;
@@ -39,9 +40,9 @@ class ReceptionProjectApplicationTests {
 	@Test
 	public void testLogin() throws Exception{
 		
-		Members member =  service.login("naruse@abc.ne.jp", "11110000");
+		LoginMember member =  service.login("naruse@abc.ne.jp", "11111111");
 		System.out.println("member>>"+member);
-		assertEquals(null,member);
+		assertEquals(1,member.getMemberId());
 
 		
 	}
@@ -67,7 +68,7 @@ class ReceptionProjectApplicationTests {
 	public void testMemberMapper() throws Exception {
 
 
-		Members member = mapper.findByEmail("naruse@abc.ne.jp");
+		Members member = mapper.findById(1);
 		System.out.println("Member >>" + member);
 		assertEquals("成瀬 太一", member.getMemberName());
 

@@ -1,27 +1,20 @@
 package com.example.rcp.controller;
 
-
-
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletResponse;
-
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
-import com.example.rcp.domain.Members;
+import com.example.rcp.domain.LoginMember;
+
 import com.example.rcp.mapper.MembersMapper;
 import com.example.rcp.service.LoginService;
-
-
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -35,39 +28,35 @@ public class LoginController {
 	@Autowired
 	MembersMapper membersMapper;
 	
-	
+
 	
 	@GetMapping("/")
-	public String homeLogin(@CookieValue(name="memberId",required= false) Integer memberId, Model model) throws Exception {
-		if(memberId == null) {
-			return "home";
-			
-		}
+	public String homeLogin(@SessionAttribute(name="loginMember",required=false) LoginMember loginMember, Model model) throws Exception {
+
 		
-		//login
-		Members loginMember = membersMapper.findById(memberId);
+		
 		if(loginMember == null) {
 			return "home";
 		}
 		
-		model.addAttribute("member",loginMember);
-		log.info("memberName={}",loginMember.getMemberName());
-	
-		
+		model.addAttribute("loginMember",loginMember);
 		return "loginHome";
 	}
+	
+	
 
 	@GetMapping("/login")
-	public String loginForm(@ModelAttribute("member") Members member) {
+	public String loginForm(@ModelAttribute("loginMember") LoginMember lgoinMember) {
 		return "loginForm";
 	}
 	
+	
+	
 	@PostMapping("/login")
-	public String login(@ModelAttribute("member") Members member,BindingResult bindingResult, HttpServletResponse response) throws Exception {
+	public String login(@ModelAttribute("loginMember") LoginMember loginMember,BindingResult bindingResult, HttpServletRequest request) throws Exception {
 		
-		log.info("memberEmail={}", member.getMemberEmail());
 		
-		Members loginMember = loginService.login(member.getMemberEmail(),member.getMemberPassword());
+		loginMember = loginService.login(loginMember.getMemberEmail(),loginMember.getMemberPassword());
 		
 		//ログイン失敗
 		if(loginMember == null) {
@@ -77,8 +66,10 @@ public class LoginController {
 		}
 		
 		//ログイン成功TODO 			
-		Cookie idCooki = new Cookie("memberId",String.valueOf(loginMember.getMemberId()));
-		response.addCookie(idCooki);
+		
+		HttpSession session = request.getSession();
+		
+		session.setAttribute("loginMember", loginMember);
 		
 		
 		return "redirect:/";
@@ -87,11 +78,14 @@ public class LoginController {
 	}
 	
 	@PostMapping("/logout")
-	public String logout(HttpServletResponse response) {
+	public String logout(HttpServletRequest request) {
+
+		HttpSession session = request.getSession(false);
+		if(session != null) {
+			session.invalidate();
+			
+		}
 		
-		Cookie cookie= new Cookie("memberId",null);
-		cookie.setMaxAge(0);
-		response.addCookie(cookie);
 		
 		return "redirect:/";
 	}

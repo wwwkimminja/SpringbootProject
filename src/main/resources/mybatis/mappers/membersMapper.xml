@@ -4,8 +4,8 @@
 
 <mapper namespace="com.example.rcp.mapper.MembersMapper">
 
-	<select id="findByEmail" parameterType = "String" resultType="com.example.rcp.domain.Members">
-	SELECT * FROM members WHERE member_email = #{email}
+	<select id="findByEmail" parameterType = "String" resultType="com.example.rcp.domain.LoginMember">
+	SELECT member_id,member_name,member_email,member_password,member_auth FROM members WHERE member_email = #{email}
 	</select>
     
 

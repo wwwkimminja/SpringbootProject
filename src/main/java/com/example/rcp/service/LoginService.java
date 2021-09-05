@@ -1,10 +1,11 @@
 package com.example.rcp.service;
 
-import com.example.rcp.domain.Members;
+import com.example.rcp.domain.LoginMember;
+
 
 public interface LoginService {
 
-	Members login(String memberEmail, String memberPassword) throws Exception;
+	LoginMember login(String Email, String Password) throws Exception;
 
 
 
