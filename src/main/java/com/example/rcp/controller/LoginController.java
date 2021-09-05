@@ -32,8 +32,6 @@ public class LoginController {
 	
 	@GetMapping("/")
 	public String homeLogin(@SessionAttribute(name="loginMember",required=false) LoginMember loginMember, Model model) throws Exception {
-
-		
 		
 		if(loginMember == null) {
 			return "home";
@@ -61,19 +59,13 @@ public class LoginController {
 		//ログイン失敗
 		if(loginMember == null) {
 			bindingResult.reject("loginFail");
-
 			return "loginForm";
 		}
 		
-		//ログイン成功TODO 			
-		
+		//ログイン成功	
 		HttpSession session = request.getSession();
-		
-		session.setAttribute("loginMember", loginMember);
-		
-		
+		session.setAttribute("loginMember", loginMember);		
 		return "redirect:/";
-		
 		
 	}
 	
@@ -82,11 +74,9 @@ public class LoginController {
 
 		HttpSession session = request.getSession(false);
 		if(session != null) {
-			session.invalidate();
-			
+			session.invalidate();			
 		}
-		
-		
+				
 		return "redirect:/";
 	}
 	
