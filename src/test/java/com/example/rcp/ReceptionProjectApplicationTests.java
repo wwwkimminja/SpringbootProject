@@ -63,7 +63,7 @@ class ReceptionProjectApplicationTests {
 		}
 	}
 
-	@Ignore
+
 	@Test
 	public void testMemberMapper() throws Exception {
 

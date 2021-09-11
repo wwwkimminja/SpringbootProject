@@ -38,7 +38,7 @@ public class LoginController {
 		}
 		
 		model.addAttribute("loginMember",loginMember);
-		return "loginHome";
+		return "home";
 	}
 	
 	
@@ -64,7 +64,8 @@ public class LoginController {
 		
 		//ログイン成功	
 		HttpSession session = request.getSession();
-		session.setAttribute("loginMember", loginMember);		
+		session.setAttribute("loginMember", loginMember);	
+		log.info("memberAuth {}",loginMember.getMemberAuth());
 		return "redirect:/";
 		
 	}

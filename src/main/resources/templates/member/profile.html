@@ -1,0 +1,45 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div id="header" th:replace="~{layout/header :: header }"></div>
+
+<body>
+
+	<div id="navbar" th:replace="~{layout/header :: navbar }"></div>
+
+	Profile
+	<div class="container-sm" th:object="${member}">
+
+		<table class="table striped rows">
+			<tbody>
+				<tr>
+					<th scope="row" th:text="#{label.member.id}">社員番号</th>
+					<td colspan="2" th:text="*{memberId}">社員番号</td>
+				</tr>
+				<tr>
+					<th scope="row" th:text="#{label.member.name}">名前(漢字）</th>
+					<td colspan="2" th:text="*{memberName}">名前(漢字）</td>
+				</tr>
+				<tr>
+					<th scope="row" th:text="#{label.member.regDate}">入社日</th>
+					<td colspan="2" th:text="*{memberRegDate}">入社日</td>
+				</tr>
+				<tr>
+					<th scope="row" th:text="#{label.member.part}">部署</th>
+					<td colspan="2" th:text="*{memberPart}">部署</td>
+				</tr>
+				<tr>
+					<th scope="row" th:text="#{label.member.tel}">内線</th>
+					<td colspan="2" th:text="*{memberTel}">内線</td>
+				</tr>
+				<tr>
+					<th scope="row" th:text="#{label.member.password}">パスワード</th>
+					<td colspan="2"　th:field ="*{memberPassword}">********</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+
+</body>
+
+</html>

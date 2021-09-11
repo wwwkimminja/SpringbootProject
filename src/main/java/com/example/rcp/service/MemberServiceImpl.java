@@ -14,8 +14,8 @@ public class MemberServiceImpl implements MemberService{
 
 	@Override
 	public Members getInfo(int memberId) throws Exception {
-		membersMapper.findById(memberId);
-		return null;
+		Members member = membersMapper.findById(memberId);
+		return member;
 	}
 
 }
