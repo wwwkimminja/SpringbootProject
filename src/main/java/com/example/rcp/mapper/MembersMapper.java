@@ -15,6 +15,8 @@ public interface MembersMapper {
 
 	public Members findById(@Param("id")int memberId) throws Exception;
 	
+	public int insert(@Param("member") Members member) throws Exception;
+	
 
 
 }

@@ -6,6 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 import javax.sql.DataSource;
 
@@ -33,10 +37,31 @@ class ReceptionProjectApplicationTests {
 	@Autowired
 	private LoginService service;
 	
-	/**
-	 * 
-	 * login情報が正しく無い時
-	 */
+	
+	@Test
+	public void testInsert() throws Exception{
+		
+		Members member = new Members();
+	
+
+		member.setMemberName("永井");
+		member.setMemberNameHiragana("ながい");
+		member.setMemberPart("営業");
+		member.setMemberPartHiragana("えいぎょう");
+		member.setMemberTel("1265");
+		member.setMemberEmail("nagi@abc.ne.jp");
+		member.setMemberPassword("12345678");
+		member.setMemberAuth((short) 1);
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		member.setMemberRegDate(timestamp);
+		
+		int result = mapper.insert(member);
+		System.out.println(result);
+		
+		assertEquals(1,result);
+		
+	}
+	@Ignore
 	@Test
 	public void testLogin() throws Exception{
 		

@@ -1,0 +1,50 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div id="header" th:replace="~{layout/header :: header }"></div>
+
+<body>
+
+	<div id="navbar" th:replace="~{layout/header :: navbar }"></div>
+
+	<div class="container">
+	<form class="row g-3" th:action="@{/account/create}" enctype="multipart/form-data" method="POST">
+		<div class="mb-3">
+			<label for="formFile" class="form-label">File input</label>
+			<input class="form-control" type="file" th:name="file" required >
+		</div>
+		<div class="col-auto">
+			<input type="submit" class="btn btn-primary mb-3" value="アップロード">
+		</div>
+		</form>
+		
+	</div>
+	<div class="container">
+	 <table class="table table-striped">
+    <thead>
+    <tr>
+     <th scope="col">#</th>
+      <th scope="col">社員名</th>
+      <th scope="col">部署名</th>
+      <th scope="col">内線</th>
+      <th scope="col">Email</th>
+      <th scope="col">入社日</th>
+      
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="list,i : ${memberList}" >
+    <td th:text="${i.index+1}">
+      <td  th:text="${list.memberName}"></td>
+      <td th:text="${list.memberPart}"></td>
+      <td th:text="${list.memberTel}"></td>
+      <td th:text="${list.memberEmail}"></td>
+       <td th:text="${list.memberRegDate}"></td>
+   
+      
+    </tr>
+    </tbody>
+  </table>
+	</div>
+</body>
+
+</html>

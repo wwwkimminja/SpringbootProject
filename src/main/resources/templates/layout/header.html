@@ -61,16 +61,25 @@
 						<a class="nav-link" th:if="${loginMember != null}" href="#"
 							th:href="@{'/member/profile/' + ${loginMember.memberId}}">Profile</a>
 					</li>
+					<div th:if="(${loginMember} neq null) and (${loginMember.memberAuth} eq '1')">
+					<li class="nav-item">
+						<a class="nav-link" th:if="${loginMember != null}" href="#"
+							th:href="@{/account/create}">アカウント作成</a>
+					</li>
+					</div>
+					<div th:if="(${loginMember} neq null) and (${loginMember.memberAuth} eq '1')">
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" id="dropdown01" data-bs-toggle="dropdown"
 							aria-expanded="false" 　
-							th:if="(${loginMember} neq null) and (${loginMember.memberAuth} eq '1')">閲覧室</a>
+							>閲覧室</a>
+						
 						<ul class="dropdown-menu" aria-labelledby="dropdown01">
 							<li><a class="dropdown-item" href="#">来客検索</a></li>
 							<li><a class="dropdown-item" href="#">来客集計</a></li>
 
 						</ul>
 					</li>
+					</div>
 				</ul>
 
 				<!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->

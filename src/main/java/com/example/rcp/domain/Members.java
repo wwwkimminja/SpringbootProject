@@ -1,5 +1,9 @@
 package com.example.rcp.domain;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
+
+
 import lombok.*;
 
 @Data
@@ -34,10 +38,10 @@ public class Members {
 	private short memberAuth;
 	
 	/** 登録日 */
-	private String memberRegDate;
+	private Timestamp memberRegDate;
 	
 	/** 修正日 */
-	private String memberModDate;
+	private Timestamp memberModDate;
 	
 
 }

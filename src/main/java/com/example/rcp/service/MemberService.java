@@ -4,6 +4,8 @@ import com.example.rcp.domain.Members;
 
 public interface MemberService {
 	
-	Members getInfo(int memberId) throws Exception;
+	Members getInfo(Integer memberId) throws Exception;
+
+	
 
 }

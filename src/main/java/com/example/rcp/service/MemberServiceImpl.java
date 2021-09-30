@@ -13,7 +13,7 @@ public class MemberServiceImpl implements MemberService{
 	MembersMapper membersMapper;
 
 	@Override
-	public Members getInfo(int memberId) throws Exception {
+	public Members getInfo(Integer memberId) throws Exception {
 		Members member = membersMapper.findById(memberId);
 		return member;
 	}

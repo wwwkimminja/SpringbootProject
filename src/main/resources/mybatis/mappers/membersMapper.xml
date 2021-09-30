@@ -13,6 +13,12 @@
 	SELECT * FROM members WHERE member_id = #{id}
 	</select>
 	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="memberId" parameterType ="com.example.rcp.domain.Members" >
+	INSERT into members(member_name,member_name_hiragana,member_part,member_part_hiragana,member_tel,member_email,member_password,member_auth,member_reg_date,member_mod_date) 
+	values (#{member.memberName},#{member.memberNameHiragana},#{member.memberPart},#{member.memberPartHiragana},#{member.memberTel},#{member.memberEmail},#{member.memberPassword},#{member.memberAuth},#{member.memberRegDate},#{member.memberModDate})
+	</insert>
+	
+	
 </mapper>
     
 
