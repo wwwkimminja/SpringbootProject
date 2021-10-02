@@ -1,5 +1,7 @@
 package com.example.rcp.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,6 +18,10 @@ public interface MembersMapper {
 	public Members findById(@Param("id")int memberId) throws Exception;
 	
 	public int insert(@Param("member") Members member) throws Exception;
+	
+	public int bulkInsert(@Param("memberList") List<Members> members) throws Exception;
+
+	public List<Members> selectByCount(@Param("count")int count) throws Exception;
 	
 
 

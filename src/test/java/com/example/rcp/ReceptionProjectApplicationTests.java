@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -37,7 +38,16 @@ class ReceptionProjectApplicationTests {
 	@Autowired
 	private LoginService service;
 	
+	@Test
+	public void testSelect()throws Exception{
+		
+		List<Members> result = mapper.selectByCount(10);
+		System.out.println(result.get(0).getMemberName());
+		assertEquals(10,result.size());
+		
+	}
 	
+	@Ignore
 	@Test
 	public void testInsert() throws Exception{
 		
@@ -89,6 +99,7 @@ class ReceptionProjectApplicationTests {
 	}
 
 
+	@Ignore
 	@Test
 	public void testMemberMapper() throws Exception {
 

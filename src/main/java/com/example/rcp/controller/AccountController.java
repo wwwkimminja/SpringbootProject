@@ -16,6 +16,7 @@ import org.attoparser.config.ParseConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,91 +35,105 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping("/account")
 public class AccountController {
-	
-	    @Autowired
-	    AccountService accountService;
-	    
-	
-	
-		@GetMapping("/create")
-		public String createForm(@SessionAttribute LoginMember loginMember, Model model ) throws Exception {
-			
-			model.addAttribute(loginMember);
-			return "account/createForm";
+
+	@Autowired
+	AccountService accountService;
+
+	@GetMapping("/create")
+	public String createForm(@SessionAttribute LoginMember loginMember, Model model) throws Exception {
+
+		model.addAttribute(loginMember);
+		return "account/createForm";
+	}
+
+	/*
+	 * @PostMapping("/create") public String
+	 * createAccount(@ModelAttribute("member")Members member,@SessionAttribute
+	 * LoginMember loginMember,Model model) throws Exception{
+	 * accountService.save(member);
+	 * 
+	 * return "account/detail";
+	 * 
+	 * 
+	 * }
+	 */
+
+	@PostMapping("/create")
+	public String createAccount(@SessionAttribute LoginMember loginMember, @RequestParam("file") MultipartFile file,
+			Model model) throws Exception {
+		List<Members> members = readFile(file);
+		List<Members> failedCreateAccountMembers = accountService.unavailabledEmail(members);
+		List<Members> memberList = accountService.save(members);
+		
+		if (memberList == null) {
+			model.addAttribute("failedMsg","Unavailable Email address");
+		} else {
+
+			log.info("succeed={}", memberList.size());
+			model.addAttribute("SuccedMsg",memberList.size()+"account created");
+			model.addAttribute("memberList", memberList);
+
 		}
-		
-		/*@PostMapping("/create")
-		public String createAccount(@ModelAttribute("member")Members member,@SessionAttribute LoginMember loginMember,Model model) throws Exception{
-			accountService.save(member);
+		if (failedCreateAccountMembers != null) {
 			
-			return "account/detail";
-			
-			
-		}*/
-		
-		@PostMapping("/create")
-		public String createAccount(@SessionAttribute LoginMember loginMember,
-				@RequestParam ("file")MultipartFile file,Model model) throws IOException{
-			
-			
-		    model.addAttribute("memberList", readFile(file)); 
-		    model.addAttribute("loginMember", loginMember);
-
-
-		    return "account/createForm";
-		
+			model.addAttribute("failedMsg","Unavailable Email address");
+			log.info("failed={}", failedCreateAccountMembers.size());
+			model.addAttribute("failedList", failedCreateAccountMembers);
 		}
-		
-		
-		
-		
-		public List<Members> readFile(MultipartFile file) throws IOException {
+
+			model.addAttribute("loginMember", loginMember);
 			
-			List<Members> memberList= new ArrayList<>();
-			
-		    String extension = FilenameUtils.getExtension(file.getOriginalFilename()); 
-		    log.info(extension);
+		return "account/createForm";
 
-		    if (!extension.equals("xlsx") && !extension.equals("xls")) {
-		      throw new IOException("Excelファイルをアップロードしてください。");
-		    }
+	}
 
-		    Workbook workbook = null;
+	public List<Members> readFile(MultipartFile file) throws IOException {
 
-		    if (extension.equals("xlsx")) {
-		      workbook = new XSSFWorkbook(file.getInputStream());
-		    } else if (extension.equals("xls")) {
-		      workbook = new HSSFWorkbook(file.getInputStream());
-		    }
-		
-		    Sheet worksheet = workbook.getSheetAt(0);
+		List<Members> memberList = new ArrayList<>();
 
-		    for (int i = 1; i < worksheet.getPhysicalNumberOfRows(); i++) { 
-		    	 
-		      Row row = worksheet.getRow(i);
-		      if(row.getCell(i)==null) {
-		       continue;
-		      }
-		      
-		      Members member = new Members();
-		     		     
-		      member.setMemberName(row.getCell(0).getStringCellValue());
-		      member.setMemberNameHiragana(row.getCell(1).getStringCellValue());
-		      member.setMemberPart(row.getCell(2).getStringCellValue());
-		      member.setMemberPartHiragana(row.getCell(3).getStringCellValue());
-		      member.setMemberTel(String.valueOf((int)row.getCell(4).getNumericCellValue()));
-		      String email = row.getCell(5).getStringCellValue() +"@abc.ne.jp";
-		      member.setMemberEmail(email);
-		      member.setMemberPassword(String.valueOf(row.getCell(6).getNumericCellValue()));
-		      member.setMemberAuth((short) row.getCell(7).getNumericCellValue());
-		      Date date = row.getCell(8).getDateCellValue();
-		      Timestamp regDate = new Timestamp(date.getTime());
-		      member.setMemberRegDate(regDate);
-		      memberList.add(member);
-		   
-		    }
-			return memberList;
-			
+		String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+		log.info(extension);
+
+		if (!extension.equals("xlsx") && !extension.equals("xls")) {
+			throw new IOException("Excelファイルをアップロードしてください。");
 		}
+
+		Workbook workbook = null;
+
+		if (extension.equals("xlsx")) {
+			workbook = new XSSFWorkbook(file.getInputStream());
+		} else if (extension.equals("xls")) {
+			workbook = new HSSFWorkbook(file.getInputStream());
+		}
+
+		Sheet worksheet = workbook.getSheetAt(0);
+
+		for (int i = 1; i < worksheet.getPhysicalNumberOfRows(); i++) {
+
+			Row row = worksheet.getRow(i);
+			if (row.getCell(i) == null) {
+				continue;
+			}
+
+			Members member = new Members();
+
+			member.setMemberName(row.getCell(0).getStringCellValue());
+			member.setMemberNameHiragana(row.getCell(1).getStringCellValue());
+			member.setMemberPart(row.getCell(2).getStringCellValue());
+			member.setMemberPartHiragana(row.getCell(3).getStringCellValue());
+			member.setMemberTel(String.valueOf((int) row.getCell(4).getNumericCellValue()));
+			String email = row.getCell(5).getStringCellValue() + "@abc.ne.jp";
+			member.setMemberEmail(email);
+			member.setMemberPassword(String.valueOf(row.getCell(6).getNumericCellValue()));
+			member.setMemberAuth((short) row.getCell(7).getNumericCellValue());
+			Date date = row.getCell(8).getDateCellValue();
+			Timestamp regDate = new Timestamp(date.getTime());
+			member.setMemberRegDate(regDate);
+			memberList.add(member);
+
+		}
+		return memberList;
+
+	}
 
 }

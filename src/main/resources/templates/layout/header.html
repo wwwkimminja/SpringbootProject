@@ -28,6 +28,10 @@
 				font-size: 3.5rem;
 			}
 		}
+
+		.field-error {
+			color: red;
+		}
 	</style>
 
 
@@ -39,7 +43,7 @@
 <body>
 
 	<nav th:fragment="navbar" class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-		<div th:object="${loginMember}" ></div>
+		<div th:object="${loginMember}"></div>
 		<div class="container-fluid">
 			<a class="navbar-brand" href="#" th:href="@{/}" th:text="#{page.home}">Navbar</a>
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -62,23 +66,22 @@
 							th:href="@{'/member/profile/' + ${loginMember.memberId}}">Profile</a>
 					</li>
 					<div th:if="(${loginMember} neq null) and (${loginMember.memberAuth} eq '1')">
-					<li class="nav-item">
-						<a class="nav-link" th:if="${loginMember != null}" href="#"
-							th:href="@{/account/create}">アカウント作成</a>
-					</li>
+						<li class="nav-item">
+							<a class="nav-link" th:if="${loginMember != null}" href="#"
+								th:href="@{/account/create}">アカウント作成</a>
+						</li>
 					</div>
 					<div th:if="(${loginMember} neq null) and (${loginMember.memberAuth} eq '1')">
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" id="dropdown01" data-bs-toggle="dropdown"
-							aria-expanded="false" 　
-							>閲覧室</a>
-						
-						<ul class="dropdown-menu" aria-labelledby="dropdown01">
-							<li><a class="dropdown-item" href="#">来客検索</a></li>
-							<li><a class="dropdown-item" href="#">来客集計</a></li>
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" id="dropdown01" data-bs-toggle="dropdown"
+								aria-expanded="false" 　>閲覧室</a>
 
-						</ul>
-					</li>
+							<ul class="dropdown-menu" aria-labelledby="dropdown01">
+								<li><a class="dropdown-item" href="#">来客検索</a></li>
+								<li><a class="dropdown-item" href="#">来客集計</a></li>
+
+							</ul>
+						</li>
 					</div>
 				</ul>
 
@@ -87,10 +90,10 @@
 				<a class="btn btn-outline-success" th:href="@{/login}" th:if="${loginMember == null}">login</a>
 
 				<a class="text-white mx-3" th:text="${loginMember != null}?${loginMember.memberName}">memberName</a>
-					<form class="d-flex" th:action="@{/logout}" method="POST">
-						<button class="btn btn-outline-success" type="submit" th:if="${loginMember != null}">logout</button>
-					</form>
-					</form>
+				<form class="d-flex" th:action="@{/logout}" method="POST">
+					<button class="btn btn-outline-success" type="submit" th:if="${loginMember != null}">logout</button>
+				</form>
+				</form>
 			</div>
 		</div>
 	</nav>

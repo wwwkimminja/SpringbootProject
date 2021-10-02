@@ -4,21 +4,42 @@
 
 <mapper namespace="com.example.rcp.mapper.MembersMapper">
 
-	<select id="findByEmail" parameterType = "String" resultType="com.example.rcp.domain.LoginMember">
-	SELECT member_id,member_name,member_email,member_password,member_auth FROM members WHERE member_email = #{email}
+	<select id="findByEmail" parameterType="String"
+		resultType="com.example.rcp.domain.LoginMember">
+		SELECT
+		member_id,member_name,member_email,member_password,member_auth FROM
+		members WHERE member_email = #{email}
 	</select>
-    
 
-	<select id="findById" parameterType = "int" resultType="com.example.rcp.domain.Members">
-	SELECT * FROM members WHERE member_id = #{id}
+
+	<select id="findById" parameterType="int"
+		resultType="com.example.rcp.domain.Members">
+		SELECT * FROM members WHERE member_id = #{id}
 	</select>
-	
-	<insert id="insert" useGeneratedKeys="true" keyProperty="memberId" parameterType ="com.example.rcp.domain.Members" >
-	INSERT into members(member_name,member_name_hiragana,member_part,member_part_hiragana,member_tel,member_email,member_password,member_auth,member_reg_date,member_mod_date) 
-	values (#{member.memberName},#{member.memberNameHiragana},#{member.memberPart},#{member.memberPartHiragana},#{member.memberTel},#{member.memberEmail},#{member.memberPassword},#{member.memberAuth},#{member.memberRegDate},#{member.memberModDate})
+
+	<insert id="insert" useGeneratedKeys="true"
+		keyProperty="memberId" parameterType="com.example.rcp.domain.Members">
+		INSERT INTO
+		members(member_name,member_name_hiragana,member_part,member_part_hiragana,member_tel,member_email,member_password,member_auth,member_reg_date,member_mod_date)
+		values
+		(#{member.memberName},#{member.memberNameHiragana},#{member.memberPart},#{member.memberPartHiragana},#{member.memberTel},#{member.memberEmail},#{member.memberPassword},#{member.memberAuth},#{member.memberRegDate},#{member.memberModDate})
 	</insert>
-	
-	
+
+	<insert id="bulkInsert" useGeneratedKeys="true"
+		keyProperty="memberId" parameterType="java.util.List">
+		INSERT INTO
+		members(member_name,member_name_hiragana,member_part,member_part_hiragana,member_tel,member_email,member_password,member_auth,member_reg_date,member_mod_date)
+		values
+		<foreach item="member" collection="memberList" separator=",">
+			(#{member.memberName},#{member.memberNameHiragana},#{member.memberPart},#{member.memberPartHiragana},#{member.memberTel},#{member.memberEmail},#{member.memberPassword},#{member.memberAuth},#{member.memberRegDate},#{member.memberModDate})
+		</foreach>
+	</insert>
+
+	<select id="selectByCount" parameterType="int"
+		resultType="com.example.rcp.domain.Members">
+		SELECT * FROM members ORDER BY member_id DESC LIMIT ${count}
+	</select>
+
 </mapper>
     
 

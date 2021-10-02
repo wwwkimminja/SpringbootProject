@@ -12,3 +12,21 @@ create table public.members (
   , member_mod_date timestamp(6) without time zone default now()
   , primary key (member_id)
 );
+
+INSERT 
+INTO public.members( 
+    member_name
+    , member_name_hiragana
+    , member_part
+    , member_part_hiragana
+    , member_tel
+    , member_email
+    , member_password
+    , member_auth
+    , member_reg_date
+) 
+VALUES ( 
+    'ã‡ùﬂéq','Ç´ÇﬁÇ›ÇÒÇ∂Ç·','ëçñ±','ÇªÇ§Çﬁ','1234','minja_k@abc.ne.jp','1234',1,'2017/7/1');
+
+DROP TABLE public.members CASCADE;
+
