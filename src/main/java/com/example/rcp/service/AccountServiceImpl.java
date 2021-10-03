@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.rcp.domain.Members;
 import com.example.rcp.mapper.MembersMapper;
@@ -25,6 +26,7 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
+	@Transactional	
 	public List<Members> save(List<Members> members) throws Exception {
 
 		List<Members> accountList = new ArrayList<Members>();
@@ -46,8 +48,8 @@ public class AccountServiceImpl implements AccountService {
 
 			int result = membersMapper.bulkInsert(accountList);
 			log.info("insert={}件成功", result);
-			members = membersMapper.selectByCount(result);
-			return members;
+			//members = membersMapper.selectByCount(result);
+			return accountList;
 		}
 	}
 	
