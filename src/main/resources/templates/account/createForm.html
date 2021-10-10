@@ -10,6 +10,9 @@
 		<form class="row g-3" th:action="@{/account/create}" enctype="multipart/form-data" method="POST">
 			<div class="mb-3">
 				<label for="formFile" class="form-label">File input</label>
+				<div th:if="${exceptionMsg}" }>
+					<p class="field-error" th:text="${exceptionMsg}"> exceptionMsg</p>
+				</div>
 				<input class="form-control" type="file" th:name="file" required>
 			</div>
 			<div class="col-auto">
@@ -22,66 +25,66 @@
 	<div class="container">
 		<div th:if="${failedMsg}" }>
 			<p class="field-error" th:text="${failedMsg}"> createAccountFail</p>
-
-			<table class="table table-striped">
-				<thead>
-					<tr>
-						<th scope="col">#</th>
-						<th scope="col">社員名</th>
-						<th scope="col">部署名</th>
-						<th scope="col">内線</th>
-						<th scope="col">Email</th>
-						<th scope="col">入社日</th>
-
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="list,i : ${failedList}">
-						<td th:text="${i.index+1}">
-						<td th:text="${list.memberName}"></td>
-						<td th:text="${list.memberPart}"></td>
-						<td th:text="${list.memberTel}"></td>
-						<td th:text="${list.memberEmail}"></td>
-						<td th:text="${list.memberRegDate}"></td>
-
-
-					</tr>
-				</tbody>
-			</table>
 		</div>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">社員名</th>
+					<th scope="col">部署名</th>
+					<th scope="col">内線</th>
+					<th scope="col">Email</th>
+					<th scope="col">入社日</th>
+
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="list,i : ${failedList}">
+					<td th:text="${i.index+1}">
+					<td th:text="${list.memberName}"></td>
+					<td th:text="${list.memberPart}"></td>
+					<td th:text="${list.memberTel}"></td>
+					<td th:text="${list.memberEmail}"></td>
+					<td th:text="${list.memberRegDate}"></td>
+
+
+				</tr>
+			</tbody>
+		</table>
+
 	</div>
-		<div class="container">
-			<div th:if="${SuccedMsg}" }>
-				<p class="field-error" th:text="${SuccedMsg}"> SucceedCreateAccount</p>
-
-				<table class="table table-striped">
-					<thead>
-						<tr>
-							<th scope="col">社員番号</th>
-							<th scope="col">社員名</th>
-							<th scope="col">部署名</th>
-							<th scope="col">内線</th>
-							<th scope="col">Email</th>
-							<th scope="col">入社日</th>
-
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="list : ${memberList}">
-							<td th:text="${list.memberId}">
-							<td th:text="${list.memberName}"></td>
-							<td th:text="${list.memberPart}"></td>
-							<td th:text="${list.memberTel}"></td>
-							<td th:text="${list.memberEmail}"></td>
-							<td th:text="${list.memberRegDate}"></td>
-
-
-						</tr>
-					</tbody>
-				</table>
-			</div>
-	
+	<div class="container">
+		<div th:if="${succedMsg}" }>
+			<p class="field-error" th:text="${succedMsg}"> SucceedCreateAccount</p>
 		</div>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">社員番号</th>
+					<th scope="col">社員名</th>
+					<th scope="col">部署名</th>
+					<th scope="col">内線</th>
+					<th scope="col">Email</th>
+					<th scope="col">入社日</th>
+
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="list : ${memberList}">
+					<td th:text="${list.memberId}">
+					<td th:text="${list.memberName}"></td>
+					<td th:text="${list.memberPart}"></td>
+					<td th:text="${list.memberTel}"></td>
+					<td th:text="${list.memberEmail}"></td>
+					<td th:text="${list.memberRegDate}"></td>
+
+
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+
 </body>
 
 </html>

@@ -5,9 +5,12 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -61,24 +64,30 @@ public class AccountController {
 	@PostMapping("/create")
 	public String createAccount(@SessionAttribute LoginMember loginMember, @RequestParam("file") MultipartFile file,
 			Model model) throws Exception {
-		List<Members> members = readFile(file);
-		List<Members> failedCreateAccountMembers = accountService.unavailabledEmail(members);
-		List<Members> memberList = accountService.save(members);
-		
-		if (memberList == null) {
-			model.addAttribute("failedMsg","Unavailable Email address");
-		} else {
-
-			log.info("succeed={}", memberList.size());
-			model.addAttribute("SuccedMsg",memberList.size()+"account created");
-			model.addAttribute("memberList", memberList);
-
-		}
-		if (failedCreateAccountMembers != null) {
+		try {
 			
-			model.addAttribute("failedMsg","Unavailable Email address");
-			log.info("failed={}", failedCreateAccountMembers.size());
-			model.addAttribute("failedList", failedCreateAccountMembers);
+			List<Members> members = readFile(file);
+			List<Members> failedCreateAccountMembers = accountService.unavailabledEmail(members);
+			List<Members> memberList = accountService.save(members);
+			if (memberList == null) {
+				model.addAttribute("failedMsg","Unavailable Email address");
+			} else {
+				
+				log.info("succeed={}", memberList.size());
+				model.addAttribute("succedMsg",memberList.size()+"account created");
+				model.addAttribute("memberList", memberList);
+				
+			}
+			if (failedCreateAccountMembers != null) {
+				
+				model.addAttribute("failedMsg","Unavailable Email address");
+				log.info("failed={}", failedCreateAccountMembers.size());
+				model.addAttribute("failedList", failedCreateAccountMembers);
+			}
+			
+		}catch(Exception e){
+			model.addAttribute("exceptionMsg",e.getMessage());
+			
 		}
 
 			model.addAttribute("loginMember", loginMember);
@@ -107,33 +116,67 @@ public class AccountController {
 		}
 
 		Sheet worksheet = workbook.getSheetAt(0);
-
-		for (int i = 1; i < worksheet.getPhysicalNumberOfRows(); i++) {
-
-			Row row = worksheet.getRow(i);
-			if (row.getCell(i) == null) {
-				continue;
-			}
-
+		log.info("row={}",worksheet.getPhysicalNumberOfRows());
+		Iterator<Row> iterator = worksheet.iterator();
+		Row row = iterator.next();
+	
+		while(iterator.hasNext()) {
+			row = iterator.next();
+	
+		
 			Members member = new Members();
 
-			member.setMemberName(row.getCell(0).getStringCellValue());
-			member.setMemberNameHiragana(row.getCell(1).getStringCellValue());
-			member.setMemberPart(row.getCell(2).getStringCellValue());
-			member.setMemberPartHiragana(row.getCell(3).getStringCellValue());
-			member.setMemberTel(String.valueOf((int) row.getCell(4).getNumericCellValue()));
-			String email = row.getCell(5).getStringCellValue() + "@abc.ne.jp";
+			member.setMemberName(cellReader(row.getCell(0)));
+			member.setMemberNameHiragana(cellReader(row.getCell(1)));
+			member.setMemberPart(cellReader(row.getCell(2)));
+			member.setMemberPartHiragana(cellReader(row.getCell(3)));
+			member.setMemberTel(cellReader(row.getCell(4)));
+			String email = cellReader(row.getCell(5)) + "@abc.ne.jp";
 			member.setMemberEmail(email);
-			member.setMemberPassword(String.valueOf(row.getCell(6).getNumericCellValue()));
-			member.setMemberAuth((short) row.getCell(7).getNumericCellValue());
+			member.setMemberPassword(cellReader(row.getCell(6)));
+			String auth=cellReader(row.getCell(7));
+			member.setMemberAuth(Short.parseShort(auth));
 			Date date = row.getCell(8).getDateCellValue();
 			Timestamp regDate = new Timestamp(date.getTime());
 			member.setMemberRegDate(regDate);
-			memberList.add(member);
 
+			memberList.add(member);
 		}
-		return memberList;
+		
+			return memberList;
 
 	}
+	
+	
+	@SuppressWarnings("incomplete-switch")
+	public static String cellReader(Cell cell) {
+		String value = "";
+		
+		CellType ct= cell.getCellTypeEnum();
+		if(ct != null) {
+			switch(cell.getCellTypeEnum()) {
+			case FORMULA:
+				value = cell.getStringCellValue();
+				break;
+			case NUMERIC:
+			    value=(int)cell.getNumericCellValue()+"";
+			    break;
+			case STRING:
+			    value=cell.getStringCellValue()+"";
+			    break;
+			case BOOLEAN:
+			    value=cell.getBooleanCellValue()+"";
+			    break;
+			case ERROR:
+			    value=cell.getErrorCellValue()+"";
+			    break;
+			}
+		}
+		return value; 
+		
+	}
 
+	 
 }
+
+

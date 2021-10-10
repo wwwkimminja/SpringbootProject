@@ -48,6 +48,7 @@ public class AccountServiceImpl implements AccountService {
 
 			int result = membersMapper.bulkInsert(accountList);
 			log.info("insert={}件成功", result);
+			
 			//members = membersMapper.selectByCount(result);
 			return accountList;
 		}
