@@ -12,6 +12,8 @@ public interface AccountService {
 	public List<Members> save(List<Members> members) throws Exception;
 
 	public List<Members> unavailabledEmail(List<Members> members) throws Exception;
+
+	public List<Members> getAllMemberList() throws Exception;
 	
 	
 

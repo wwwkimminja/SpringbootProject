@@ -37,9 +37,16 @@
 
 	<select id="selectByCount" parameterType="int"
 		resultType="com.example.rcp.domain.Members">
-		SELECT * FROM members ORDER BY member_id DESC LIMIT ${count}
+		SELECT * FROM members ORDER BY member_id DESC LIMIT
+		${count}
 	</select>
 
+	<select id="selectAllMembers" resultType="com.example.rcp.domain.Members">
+		SELECT * FROM members ORDER BY member_id ASC
+		
+	</select>
+	
+	
 </mapper>
     
 

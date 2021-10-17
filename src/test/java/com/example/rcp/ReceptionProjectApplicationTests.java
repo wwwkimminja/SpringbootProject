@@ -24,6 +24,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.example.rcp.domain.LoginMember;
 import com.example.rcp.domain.Members;
 import com.example.rcp.mapper.MembersMapper;
+import com.example.rcp.service.AccountService;
 import com.example.rcp.service.LoginService;
 
 @RunWith(SpringRunner.class)
@@ -38,6 +39,22 @@ class ReceptionProjectApplicationTests {
 	@Autowired
 	private LoginService service;
 	
+	
+	@Autowired
+	private AccountService accountService;
+	
+	@Test
+	public void testSelectAll() throws Exception {
+		
+		List<Members> allMemberList = accountService.getAllMemberList();
+		System.out.println(allMemberList.get(85).getMemberName());
+		
+		assertEquals(86,allMemberList.size());
+		
+	}
+	
+	/*
+	@Ignore
 	@Test
 	public void testSelect()throws Exception{
 		
@@ -126,5 +143,5 @@ class ReceptionProjectApplicationTests {
 		}
 		return result;
 	}
-
+*/
 }

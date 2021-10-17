@@ -2,11 +2,15 @@ package com.example.rcp.controller;
 
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.time.LocalDate;
+
 import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -15,11 +19,14 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.attoparser.config.ParseConfiguration;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+
 import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,9 +34,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
+//import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.rcp.domain.LoginMember;
 import com.example.rcp.domain.Members;
+
+//import com.example.rcp.domain.SearchOption;
+
+import com.example.rcp.repository.MembersRepository;
 import com.example.rcp.service.AccountService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +52,10 @@ import lombok.extern.slf4j.Slf4j;
 public class AccountController {
 
 	@Autowired
-	AccountService accountService;
+	private MembersRepository membersRepository;
+
+	@Autowired
+	private AccountService accountService;
 
 	@GetMapping("/create")
 	public String createForm(@SessionAttribute LoginMember loginMember, Model model) throws Exception {
@@ -48,50 +63,90 @@ public class AccountController {
 		model.addAttribute(loginMember);
 		return "account/createForm";
 	}
+	
+	@GetMapping("/members")
+	public String getMemberList(@SessionAttribute LoginMember loginMember, Model model,Pageable pageable)throws Exception{
+		Page<com.example.rcp.model.Members> memberList = membersRepository.findAll(pageable);
+		int startPage=Math.max(1,memberList.getPageable().getPageNumber()- 4);
+		int endPage=Math.min(memberList.getTotalPages(), memberList.getPageable().getPageNumber() + 4);
+		
+		model.addAttribute("memberList", memberList);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
+		model.addAttribute(loginMember);
+		return "account/accountSearch";
+				
+		
+	}
 
-	/*
-	 * @PostMapping("/create") public String
-	 * createAccount(@ModelAttribute("member")Members member,@SessionAttribute
-	 * LoginMember loginMember,Model model) throws Exception{
-	 * accountService.save(member);
-	 * 
-	 * return "account/detail";
-	 * 
-	 * 
-	 * }
-	 */
+/*	@GetMapping("/members")
+	public String updateForm(@SessionAttribute LoginMember loginMember, Model model,Pageable pageable) throws Exception {
+	
+		Map<String, String> select_items = new LinkedHashMap<>();
+		select_items.put("All", "All");
+		select_items.put("社員名", "Name");
+		select_items.put("部署名", "Part");
+
+		log.info("model={}",model.getAttribute("startPage"));
+
+		SearchOption searchOption = new SearchOption();
+
+		model.addAttribute("searchOption", searchOption);
+		model.addAttribute("select_items", select_items);
+		model.addAttribute(loginMember);
+
+		return "account/updateForm";
+	}
+
+	@PostMapping("/members")
+	public String selectMembers(@SessionAttribute LoginMember loginMember, RedirectAttributes rttr, Pageable pageable)
+			throws Exception {
+
+		// List<Members> memberList = accountService.getAllMemberList();
+
+		Page<com.example.rcp.model.Members> memberList = membersRepository.findAll(pageable);
+		int startPage=Math.max(1,memberList.getPageable().getPageNumber()-4);
+		int endPage=Math.max(memberList.getTotalPages(), memberList.getPageable().getPageNumber() +4);
+				
+		rttr.addFlashAttribute("memberList", memberList);
+		rttr.addFlashAttribute("startPage", startPage);
+		rttr.addFlashAttribute("endPage", endPage);
+	
+		return "redirect:/account/members";
+	}
+	
+*/
 
 	@PostMapping("/create")
 	public String createAccount(@SessionAttribute LoginMember loginMember, @RequestParam("file") MultipartFile file,
 			Model model) throws Exception {
 		try {
-			
 			List<Members> members = readFile(file);
 			List<Members> failedCreateAccountMembers = accountService.unavailabledEmail(members);
 			List<Members> memberList = accountService.save(members);
 			if (memberList == null) {
-				model.addAttribute("failedMsg","Unavailable Email address");
+				model.addAttribute("failedMsg", "Unavailable Email address");
 			} else {
-				
+
 				log.info("succeed={}", memberList.size());
-				model.addAttribute("succedMsg",memberList.size()+"account created");
+				model.addAttribute("succedMsg", memberList.size() + "account created");
 				model.addAttribute("memberList", memberList);
-				
+
 			}
 			if (failedCreateAccountMembers != null) {
-				
-				model.addAttribute("failedMsg","Unavailable Email address");
+
+				model.addAttribute("failedMsg", "Unavailable Email address");
 				log.info("failed={}", failedCreateAccountMembers.size());
 				model.addAttribute("failedList", failedCreateAccountMembers);
 			}
-			
-		}catch(Exception e){
-			model.addAttribute("exceptionMsg",e.getMessage());
-			
+
+		} catch (Exception e) {
+			model.addAttribute("exceptionMsg", e.getMessage());
+
 		}
 
-			model.addAttribute("loginMember", loginMember);
-			
+		model.addAttribute("loginMember", loginMember);
+
 		return "account/createForm";
 
 	}
@@ -116,14 +171,13 @@ public class AccountController {
 		}
 
 		Sheet worksheet = workbook.getSheetAt(0);
-		log.info("row={}",worksheet.getPhysicalNumberOfRows());
+		log.info("row={}", worksheet.getPhysicalNumberOfRows());
 		Iterator<Row> iterator = worksheet.iterator();
 		Row row = iterator.next();
-	
-		while(iterator.hasNext()) {
+
+		while (iterator.hasNext()) {
 			row = iterator.next();
-	
-		
+
 			Members member = new Members();
 
 			member.setMemberName(cellReader(row.getCell(0)));
@@ -134,7 +188,7 @@ public class AccountController {
 			String email = cellReader(row.getCell(5)) + "@abc.ne.jp";
 			member.setMemberEmail(email);
 			member.setMemberPassword(cellReader(row.getCell(6)));
-			String auth=cellReader(row.getCell(7));
+			String auth = cellReader(row.getCell(7));
 			member.setMemberAuth(Short.parseShort(auth));
 			Date date = row.getCell(8).getDateCellValue();
 			Timestamp regDate = new Timestamp(date.getTime());
@@ -142,41 +196,37 @@ public class AccountController {
 
 			memberList.add(member);
 		}
-		
-			return memberList;
+
+		return memberList;
 
 	}
-	
-	
+
 	@SuppressWarnings("incomplete-switch")
 	public static String cellReader(Cell cell) {
 		String value = "";
-		
-		CellType ct= cell.getCellTypeEnum();
-		if(ct != null) {
-			switch(cell.getCellTypeEnum()) {
+
+		CellType ct = cell.getCellTypeEnum();
+		if (ct != null) {
+			switch (cell.getCellTypeEnum()) {
 			case FORMULA:
 				value = cell.getStringCellValue();
 				break;
 			case NUMERIC:
-			    value=(int)cell.getNumericCellValue()+"";
-			    break;
+				value = (int) cell.getNumericCellValue() + "";
+				break;
 			case STRING:
-			    value=cell.getStringCellValue()+"";
-			    break;
+				value = cell.getStringCellValue() + "";
+				break;
 			case BOOLEAN:
-			    value=cell.getBooleanCellValue()+"";
-			    break;
+				value = cell.getBooleanCellValue() + "";
+				break;
 			case ERROR:
-			    value=cell.getErrorCellValue()+"";
-			    break;
+				value = cell.getErrorCellValue() + "";
+				break;
 			}
 		}
-		return value; 
-		
+		return value;
+
 	}
 
-	 
 }
-
-

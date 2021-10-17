@@ -1,5 +1,7 @@
 package com.example.rcp.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +26,7 @@ public class MemberController {
 
 	@GetMapping("/profile/{memberId}")
 	 public String getProfile(@PathVariable Integer memberId,@SessionAttribute LoginMember loginMember, Model model) throws Exception {
+
 
 
 		Members member = memberService.getInfo(memberId);

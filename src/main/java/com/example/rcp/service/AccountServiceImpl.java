@@ -71,4 +71,13 @@ public class AccountServiceImpl implements AccountService {
 		return unavailableList;
 		
 	}
+
+	@Override
+	public List<Members> getAllMemberList() throws Exception {
+		
+		 List<Members> allMemberList=new ArrayList<Members>();
+		 
+		 allMemberList=membersMapper.selectAllMembers();
+		return allMemberList;
+	}
 }

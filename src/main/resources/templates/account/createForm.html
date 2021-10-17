@@ -25,7 +25,6 @@
 	<div class="container">
 		<div th:if="${failedMsg}" }>
 			<p class="field-error" th:text="${failedMsg}"> createAccountFail</p>
-		</div>
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -51,12 +50,12 @@
 				</tr>
 			</tbody>
 		</table>
+		</div>
 
 	</div>
 	<div class="container">
 		<div th:if="${succedMsg}" }>
 			<p class="field-error" th:text="${succedMsg}"> SucceedCreateAccount</p>
-		</div>
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -82,9 +81,11 @@
 				</tr>
 			</tbody>
 		</table>
+		</div>
 	</div>
 
 
+	<script src="/assets/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

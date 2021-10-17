@@ -2,15 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <div id="header" th:replace="~{layout/header :: header }"></div>
 
-  <body>
+<body>
 
-<div id="navbar" th:replace="~{layout/logoutHeader :: navbar }"></div>
+	<div id="navbar" th:replace="~{layout/logoutHeader :: navbar }"></div>
 
-Login home
+	Login home
 
-<h3 th:text="|login:${loginMember.memberName}|"> member's name</h3>
+	<h3 th:text="|login:${loginMember.memberName}|"> member's name</h3>
 
-      
-  </body>   
-   
+	<script src="/assets/js/bootstrap.bundle.min.js"></script>
+</body>
+
 </html>
