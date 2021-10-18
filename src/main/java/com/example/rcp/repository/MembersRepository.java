@@ -11,5 +11,6 @@ import com.example.rcp.model.Members;
 @Repository
 public interface MembersRepository extends JpaRepository<Members,Integer>{
 	
+
 	
 }

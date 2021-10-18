@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.rcp.domain.Members;
+import com.example.rcp.domain.SearchOption;
 import com.example.rcp.mapper.MembersMapper;
+import com.example.rcp.repository.MembersRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,13 +21,12 @@ import lombok.extern.slf4j.Slf4j;
 public class AccountServiceImpl implements AccountService {
 
 	@Autowired
-	MembersMapper membersMapper;
+	private MembersMapper membersMapper;
+	
 
-	@Override
-	public Members save(Members member) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	@Autowired
+	private MembersRepository membersRepository;
+	
 
 	@Override
 	@Transactional	
@@ -72,12 +75,22 @@ public class AccountServiceImpl implements AccountService {
 		
 	}
 
+	
+
 	@Override
-	public List<Members> getAllMemberList() throws Exception {
-		
-		 List<Members> allMemberList=new ArrayList<Members>();
+	public Page<com.example.rcp.model.Members> selectMembers(Pageable pageable,SearchOption searchOption) {
+
 		 
-		 allMemberList=membersMapper.selectAllMembers();
-		return allMemberList;
+		if(searchOption.getSearchItem() =="All"&& searchOption.getSearchText()==null) {
+			
+		}
+	
+		return membersRepository.findAll(pageable);
+	
 	}
+
+
+
+
+	
 }

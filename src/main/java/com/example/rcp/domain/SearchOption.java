@@ -12,9 +12,9 @@ public class SearchOption {
 
 	
 	@Pattern(regexp ="All|Name|Part")
-	private String option;
+	private String searchItem;
 	
-	private String keyword;
+	private String searchText;
 	
 	
 

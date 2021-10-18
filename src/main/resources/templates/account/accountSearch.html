@@ -6,10 +6,10 @@
 
 	<div id="navbar" th:replace="~{layout/header :: navbar }"></div>
 
-	<!--<div class="container">
-		<form class="row" th:object="${searchOption}" th:action="@{/account/members}" method="POST">
+	<div class="container">
+		<form class="row" th:object="${searchOption}" th:action="@{/account/members}" >
 			<div class="col-md-3">
-				<select class="form-select" th:field="*{option}">
+				<select class="form-select" th:field="*{searchItem}">
 
 					<option th:each="select_item : ${select_items}" th:value="${select_item.value}"
 						th:text="${select_item.key}">pulldown</option>
@@ -17,13 +17,13 @@
 				</select>
 			</div>
 			<div class="col-md-6">
-				<input type="text" class="form-control" th:field="*{keyword}">
+				<input type="text" class="form-control" th:field="*{searchText}">
 			</div>
 			<div class="col-md-2">
 				<button type="submit" class="btn btn-primary">Search</button>
 			</div>
 		</form>
-	</div>-->
+	</div>
 	
 	<hr class="my-4">
 	<div class="container" th:if="${memberList != null}" >

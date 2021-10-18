@@ -38,6 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.rcp.domain.LoginMember;
 import com.example.rcp.domain.Members;
+import com.example.rcp.domain.SearchOption;
 
 //import com.example.rcp.domain.SearchOption;
 
@@ -52,9 +53,6 @@ import lombok.extern.slf4j.Slf4j;
 public class AccountController {
 
 	@Autowired
-	private MembersRepository membersRepository;
-
-	@Autowired
 	private AccountService accountService;
 
 	@GetMapping("/create")
@@ -65,57 +63,37 @@ public class AccountController {
 	}
 	
 	@GetMapping("/members")
-	public String getMemberList(@SessionAttribute LoginMember loginMember, Model model,Pageable pageable)throws Exception{
-		Page<com.example.rcp.model.Members> memberList = membersRepository.findAll(pageable);
-		int startPage=Math.max(1,memberList.getPageable().getPageNumber()- 4);
-		int endPage=Math.min(memberList.getTotalPages(), memberList.getPageable().getPageNumber() + 4);
+	public String getMemberList(@SessionAttribute LoginMember loginMember, Model model,Pageable pageable,SearchOption searchOption)throws Exception{
 		
-		model.addAttribute("memberList", memberList);
-		model.addAttribute("startPage", startPage);
-		model.addAttribute("endPage", endPage);
-		model.addAttribute(loginMember);
-		return "account/accountSearch";
-				
-		
-	}
-
-/*	@GetMapping("/members")
-	public String updateForm(@SessionAttribute LoginMember loginMember, Model model,Pageable pageable) throws Exception {
 	
+		
 		Map<String, String> select_items = new LinkedHashMap<>();
 		select_items.put("All", "All");
 		select_items.put("社員名", "Name");
 		select_items.put("部署名", "Part");
 
-		log.info("model={}",model.getAttribute("startPage"));
-
-		SearchOption searchOption = new SearchOption();
-
 		model.addAttribute("searchOption", searchOption);
 		model.addAttribute("select_items", select_items);
 		model.addAttribute(loginMember);
 
-		return "account/updateForm";
+		if(searchOption.getSearchItem()!=null) {
+			
+			Page<com.example.rcp.model.Members> memberList=accountService.selectMembers(pageable,searchOption);
+			
+			//Page<com.example.rcp.model.Members> memberList = membersRepository.findAll(pageable);
+			int startPage=Math.max(1,memberList.getPageable().getPageNumber()- 4);
+			int endPage=Math.min(memberList.getTotalPages(), memberList.getPageable().getPageNumber() + 4);
+			
+			model.addAttribute("memberList", memberList);
+			model.addAttribute("startPage", startPage);
+			model.addAttribute("endPage", endPage);
+		
+		}
+		
+		return "account/accountSearch";
+		
 	}
 
-	@PostMapping("/members")
-	public String selectMembers(@SessionAttribute LoginMember loginMember, RedirectAttributes rttr, Pageable pageable)
-			throws Exception {
-
-		// List<Members> memberList = accountService.getAllMemberList();
-
-		Page<com.example.rcp.model.Members> memberList = membersRepository.findAll(pageable);
-		int startPage=Math.max(1,memberList.getPageable().getPageNumber()-4);
-		int endPage=Math.max(memberList.getTotalPages(), memberList.getPageable().getPageNumber() +4);
-				
-		rttr.addFlashAttribute("memberList", memberList);
-		rttr.addFlashAttribute("startPage", startPage);
-		rttr.addFlashAttribute("endPage", endPage);
-	
-		return "redirect:/account/members";
-	}
-	
-*/
 
 	@PostMapping("/create")
 	public String createAccount(@SessionAttribute LoginMember loginMember, @RequestParam("file") MultipartFile file,
