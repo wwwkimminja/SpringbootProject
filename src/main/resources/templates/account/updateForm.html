@@ -7,11 +7,11 @@
 	<div id="navbar" th:replace="~{layout/header :: navbar }"></div>
 
 	<div class="container">
-		<form class="row" th:object="${searchOption}" th:action="@{/account/members}" method="POST">
+		<form id = "target" class="row" th:object="${searchOption}" th:action="@{/account/members}" method="POST">
 			<div class="col-md-3">
 				<select class="form-select" th:field="*{option}">
 
-					<option th:each="select_item : ${select_items}" th:value="${select_item.value}"
+					<option id="item" th:each="select_item : ${select_items}" th:value="${select_item.value}"
 						th:text="${select_item.key}">pulldown</option>
 
 				</select>
@@ -20,12 +20,12 @@
 				<input type="text" class="form-control" th:field="*{keyword}">
 			</div>
 			<div class="col-md-2">
-				<button type="submit" class="btn btn-primary">Search</button>
+				<button type="submit" onclick="actionUrlChange()"class="btn btn-primary">Search</button>
 			</div>
 		</form>
 	</div>
 	<hr class="my-4">
-	<div class="container" th:if="${serchOption != null}" >
+	<div class="container" th:if="${serchOption != null}">
 		<div>total : <span th:text="${memberList.totalElements +  '件'}"></span></div>
 		<table class="table table-striped">
 			<thead>
@@ -42,7 +42,8 @@
 			<tbody>
 				<tr th:each="list : ${memberList}">
 					<td th:text="${list.memberId}">
-					<td th:href="@{/account/member/{memberId}(memberId=${list.memberId})}"th:text="${list.memberName}" ></td>
+					<td th:href="@{/account/member/{memberId}(memberId=${list.memberId})}" th:text="${list.memberName}">
+					</td>
 					<td th:text="${list.memberPart}"></td>
 					<td th:text="${list.memberTel}"></td>
 					<td th:text="${list.memberEmail}"></td>
@@ -51,12 +52,14 @@
 			</tbody>
 		</table>
 
-	<nav aria-label="Page navigation example">
-		<ul class="pagination justify-content-center">
-			<li class="page-item "th:classappend ="${1 == memberList.pageable.pageNumber+1}?'disabled'">
-				<a class="page-link" href="#" th:href="@{/account/members(page=${memberList.pageable.pageNumber - 1})}"tabindex="-1" aria-disabled="true">Previous</a>
-			</li>			
-			<li class="page-item" th:classappend ="${i == memberList.pageable.pageNumber+1}?'disabled'" th:each="i : ${#numbers.sequence(startPage, endPage)}">
+		<nav aria-label="Page navigation example">
+			<ul class="pagination justify-content-center">
+				<li class="page-item " th:classappend="${1 == memberList.pageable.pageNumber+1}?'disabled'">
+					<a class="page-link" href="#"
+						th:href="@{/account/members(page=${memberList.pageable.pageNumber - 1})}" tabindex="-1"
+						aria-disabled="true">Previous</a>
+				</li>
+				<li class="page-item" th:classappend="${i == memberList.pageable.pageNumber+1}?'disabled'" th:each="i : ${#numbers.sequence(startPage, endPage)}">
 			<a class="page-link" href="#" th:href="@{/account/members(page=${i - 1})}"th:text ="${i}">1</a></li>
 			<li class ="page-item" th:classappend ="${memberList.totalPages == memberList.pageable.pageNumber+1}?'disabled'">
 				<a class="page-link" href="#"th:href="@{/account/members(page=${memberList.pageable.pageNumber + 1})}">Next</a>
@@ -68,5 +71,10 @@
 
 
 	<script src="/assets/bootstrap.bundle.min.js"></script>
+
+	
+	
+	</script>
+	
 
 </html>

@@ -27,7 +27,7 @@ public class MemberController {
 	@GetMapping("/profile/{memberId}")
 	 public String getProfile(@PathVariable Integer memberId,@SessionAttribute LoginMember loginMember, Model model) throws Exception {
 
-
+	
 
 		Members member = memberService.getInfo(memberId);
 

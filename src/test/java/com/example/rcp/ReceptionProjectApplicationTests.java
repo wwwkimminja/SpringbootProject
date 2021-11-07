@@ -19,11 +19,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.example.rcp.domain.LoginMember;
-import com.example.rcp.domain.Members;
+
 import com.example.rcp.mapper.MembersMapper;
+import com.example.rcp.model.Members;
+import com.example.rcp.repository.MembersRepository;
 import com.example.rcp.service.AccountService;
 import com.example.rcp.service.LoginService;
 
@@ -36,6 +39,7 @@ class ReceptionProjectApplicationTests {
 	@Autowired
 	private MembersMapper mapper;
 	
+	
 	@Autowired
 	private LoginService service;
 	
@@ -43,16 +47,8 @@ class ReceptionProjectApplicationTests {
 	@Autowired
 	private AccountService accountService;
 	
-	@Test
-	public void testSelectAll() throws Exception {
-		
-		List<Members> allMemberList = accountService.getAllMemberList();
-		System.out.println(allMemberList.get(85).getMemberName());
-		
-		assertEquals(86,allMemberList.size());
-		
-	}
-	
+
+
 	/*
 	@Ignore
 	@Test

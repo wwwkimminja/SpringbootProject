@@ -18,18 +18,17 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@Transactional
 public class AccountServiceImpl implements AccountService {
 
 	@Autowired
 	private MembersMapper membersMapper;
-	
 
 	@Autowired
 	private MembersRepository membersRepository;
-	
 
 	@Override
-	@Transactional	
+	@Transactional
 	public List<Members> save(List<Members> members) throws Exception {
 
 		List<Members> accountList = new ArrayList<Members>();
@@ -45,18 +44,17 @@ public class AccountServiceImpl implements AccountService {
 			}
 		}
 
-		if(accountList.size()==0) {
+		if (accountList.size() == 0) {
 			return null;
-		}else {
+		} else {
 
 			int result = membersMapper.bulkInsert(accountList);
 			log.info("insert={}件成功", result);
-			
-			//members = membersMapper.selectByCount(result);
+
+			// members = membersMapper.selectByCount(result);
 			return accountList;
 		}
 	}
-	
 
 	@Override
 	public List<Members> unavailabledEmail(List<Members> members) throws Exception {
@@ -64,33 +62,44 @@ public class AccountServiceImpl implements AccountService {
 
 		for (int i = 0; i < members.size(); i++) {
 			String email = members.get(i).getMemberEmail();
-			
+
 			if (membersMapper.findByEmail(email) != null) {
-	
+
 				unavailableList.add(members.get(i));
 			}
 		}
-		
-		return unavailableList;
-		
-	}
 
-	
+		return unavailableList;
+
+	}
 
 	@Override
-	public Page<com.example.rcp.model.Members> selectMembers(Pageable pageable,SearchOption searchOption) {
+	public Page<com.example.rcp.model.Members> selectMembers(Pageable pageable, SearchOption searchOption) {
 
-		 
-		if(searchOption.getSearchItem() =="All"&& searchOption.getSearchText()==null) {
-			
-		}
-	
-		return membersRepository.findAll(pageable);
-	
+		String searchItem = searchOption.getSearchItem();
+		String searchKeyword = searchOption.getSearchText();
+		Page<com.example.rcp.model.Members> result = null;
+
+			switch (searchItem) {
+			case "all":
+				result = membersRepository.findByMemberNameOrMemberPartContainig(searchKeyword, searchKeyword,
+						pageable);
+				break;
+
+			case "name":
+				result = membersRepository.findByMemberNameContainig(searchKeyword, pageable);
+				log.info("{}", result.getSize());
+				break;
+
+			case "part":
+				result = membersRepository.findByMemberPartContainig(searchKeyword, pageable);
+				break;
+
+			}
+		
+
+		return result;
+
 	}
 
-
-
-
-	
 }

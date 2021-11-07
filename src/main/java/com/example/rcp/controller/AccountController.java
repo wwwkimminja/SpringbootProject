@@ -28,7 +28,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
 import org.springframework.web.bind.annotation.GetMapping;
-
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -55,45 +56,66 @@ public class AccountController {
 	@Autowired
 	private AccountService accountService;
 
+	@ModelAttribute(name = "select_items")
+	public Map<String, String> selectItems() {
+		Map<String, String> select_items = new LinkedHashMap<>();
+		select_items.put("All", "all");
+		select_items.put("社員名", "name");
+		select_items.put("部署名", "part");
+		return select_items;
+	}
+
 	@GetMapping("/create")
 	public String createForm(@SessionAttribute LoginMember loginMember, Model model) throws Exception {
 
 		model.addAttribute(loginMember);
 		return "account/createForm";
 	}
-	
+
 	@GetMapping("/members")
-	public String getMemberList(@SessionAttribute LoginMember loginMember, Model model,Pageable pageable,SearchOption searchOption)throws Exception{
-		
-	
-		
-		Map<String, String> select_items = new LinkedHashMap<>();
-		select_items.put("All", "All");
-		select_items.put("社員名", "Name");
-		select_items.put("部署名", "Part");
+	public String getMemberList(@SessionAttribute LoginMember loginMember, Model model, Pageable pageable,
+			SearchOption searchOption) throws Exception {
 
 		model.addAttribute("searchOption", searchOption);
-		model.addAttribute("select_items", select_items);
 		model.addAttribute(loginMember);
 
-		if(searchOption.getSearchItem()!=null) {
-			
-			Page<com.example.rcp.model.Members> memberList=accountService.selectMembers(pageable,searchOption);
-			
-			//Page<com.example.rcp.model.Members> memberList = membersRepository.findAll(pageable);
-			int startPage=Math.max(1,memberList.getPageable().getPageNumber()- 4);
-			int endPage=Math.min(memberList.getTotalPages(), memberList.getPageable().getPageNumber() + 4);
-			
-			model.addAttribute("memberList", memberList);
-			model.addAttribute("startPage", startPage);
-			model.addAttribute("endPage", endPage);
-		
-		}
-		
 		return "account/accountSearch";
-		
+
 	}
 
+	@GetMapping("/members/{selectedItem}")
+	public String getMemberListFromAll(@SessionAttribute LoginMember loginMember, @PathVariable String selectedItem,
+			Model model, Pageable pageable, SearchOption searchOption) throws Exception {
+
+		int startPage = 0;
+		int endPage = 0;
+		if(searchOption.getSearchText() == "") {
+			
+		}else {
+			
+		
+		Page<com.example.rcp.model.Members> memberList = accountService.selectMembers(pageable, searchOption);
+		if (memberList.getContent().isEmpty()) {
+
+		} else {
+
+			startPage = Math.max(1, memberList.getPageable().getPageNumber() - 4);
+			endPage = Math.min(memberList.getTotalPages(), memberList.getPageable().getPageNumber() + 4);
+			
+		}
+
+		model.addAttribute("memberList", memberList);
+		model.addAttribute("startPage", startPage);
+		model.addAttribute("endPage", endPage);
+		}
+
+		model.addAttribute("searchOption", searchOption);
+		model.addAttribute("selectedItem", selectedItem);
+		model.addAttribute(loginMember);
+
+		return "account/accountSearch";
+
+	}
 
 	@PostMapping("/create")
 	public String createAccount(@SessionAttribute LoginMember loginMember, @RequestParam("file") MultipartFile file,

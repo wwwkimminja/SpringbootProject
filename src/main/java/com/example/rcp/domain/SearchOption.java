@@ -11,7 +11,7 @@ import lombok.Data;
 public class SearchOption {
 
 	
-	@Pattern(regexp ="All|Name|Part")
+	@Pattern(regexp ="all|name|part")
 	private String searchItem;
 	
 	private String searchText;
