@@ -29,6 +29,8 @@ public interface MembersMapper {
 	public List<Members> selectAllMembers() throws Exception;
 	
 	public Page<Members> selectAll(Pageable pageable);
+
+	public int update(Members member);
 	
 
 

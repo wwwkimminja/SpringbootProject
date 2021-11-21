@@ -2,12 +2,17 @@ package com.example.rcp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.rcp.domain.LoginMember;
 import com.example.rcp.domain.Members;
 import com.example.rcp.mapper.MembersMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
+
 @Service
+@Transactional
 public class LoginServiceImpl implements LoginService{
 	
 	@Autowired

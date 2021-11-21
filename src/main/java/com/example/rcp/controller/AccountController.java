@@ -45,6 +45,7 @@ import com.example.rcp.domain.SearchOption;
 
 import com.example.rcp.repository.MembersRepository;
 import com.example.rcp.service.AccountService;
+import com.example.rcp.service.MemberService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,6 +56,9 @@ public class AccountController {
 
 	@Autowired
 	private AccountService accountService;
+	
+	@Autowired
+	private MemberService memberService;
 
 	@ModelAttribute(name = "select_items")
 	public Map<String, String> selectItems() {
@@ -82,6 +86,8 @@ public class AccountController {
 		return "account/accountSearch";
 
 	}
+	
+
 
 	@GetMapping("/members/{selectedItem}")
 	public String getMemberListFromAll(@SessionAttribute LoginMember loginMember, @PathVariable String selectedItem,
@@ -89,24 +95,23 @@ public class AccountController {
 
 		int startPage = 0;
 		int endPage = 0;
-		if(searchOption.getSearchText() == "") {
-			
-		}else {
-			
-		
-		Page<com.example.rcp.model.Members> memberList = accountService.selectMembers(pageable, searchOption);
-		if (memberList.getContent().isEmpty()) {
+		if (searchOption.getSearchText() == "") {
 
 		} else {
 
-			startPage = Math.max(1, memberList.getPageable().getPageNumber() - 4);
-			endPage = Math.min(memberList.getTotalPages(), memberList.getPageable().getPageNumber() + 4);
-			
-		}
+			Page<com.example.rcp.model.Members> memberList = accountService.selectMembers(pageable, searchOption);
+			if (memberList.getContent().isEmpty()) {
 
-		model.addAttribute("memberList", memberList);
-		model.addAttribute("startPage", startPage);
-		model.addAttribute("endPage", endPage);
+			} else {
+
+				startPage = Math.max(1, memberList.getPageable().getPageNumber() - 4);
+				endPage = Math.min(memberList.getTotalPages(), memberList.getPageable().getPageNumber() + 4);
+
+			}
+
+			model.addAttribute("memberList", memberList);
+			model.addAttribute("startPage", startPage);
+			model.addAttribute("endPage", endPage);
 		}
 
 		model.addAttribute("searchOption", searchOption);

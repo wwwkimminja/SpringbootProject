@@ -7,7 +7,7 @@
 	<div id="navbar" th:replace="~{layout/header :: navbar }"></div>
 
 	<div class="container">
-		<form id="target"class="row" th:object="${searchOption}" th:action="@{/account/members/}">
+		<form id="target" class="row" th:object="${searchOption}" th:action="@{/account/members/}">
 			<div class="col-md-3">
 				<select class="form-select" th:field="*{searchItem}">
 
@@ -19,7 +19,7 @@
 				<input type="text" class="form-control" th:field="*{searchText}" required autofocus>
 			</div>
 			<div class="col-md-2">
-				<button  type="submit" onclick="actionUrlChange();"class="btn btn-primary">Search</button>
+				<button type="submit" onclick="actionUrlChange();" class="btn btn-primary">Search</button>
 			</div>
 		</form>
 	</div>
@@ -42,8 +42,8 @@
 			<tbody>
 				<tr th:each="list : ${memberList}">
 					<td th:text="${list.memberId}">
-					<td th:href="@{/account/member/{memberId}(memberId=${list.memberId})}" th:text="${list.memberName}">
-					</td>
+					<td><a href="#" th:href="@{'/member/account/'+ ${list.memberId}+ '/edit'}"
+							th:text="${list.memberName}"></a></td>
 					<td th:text="${list.memberPart}"></td>
 					<td th:text="${list.memberTel}"></td>
 					<td th:text="${list.memberEmail}"></td>
@@ -53,7 +53,7 @@
 		</table>
 
 		<nav aria-label="Page navigation example">
-			<ul class="pagination justify-content-center" th:if ="!${#lists.isEmpty(memberList.content)} " > 
+			<ul class="pagination justify-content-center" th:if="!${#lists.isEmpty(memberList.content)} " > 
 				<li class="page-item " th:classappend="${1 == memberList.pageable.pageNumber+1}?'disabled'">
 					<a class="page-link" href="#"
 						th:href="@{'/account/members/' + ${selectedItem} +'?searchItem='+${searchOption.searchItem}+'&searchText='+${searchOption.searchText}(page=${memberList.pageable.pageNumber - 1})}" tabindex="-1"
@@ -73,11 +73,11 @@
 	<script src="/assets/bootstrap.bundle.min.js"></script>
 	<script src="/webjars/jquery/3.4.1/jquery.min.js"></script>
 	<script>
-	function actionUrlChange(){
-		var selectItem = $('#searchItem').val();
-		var newUrl = "/account/members/" + selectItem;
-		$("#target").attr("action",newUrl).submit();
-	}
+		function actionUrlChange() {
+			var selectItem = $('#searchItem').val();
+			var newUrl = "/account/members/" + selectItem;
+			$("#target").attr("action", newUrl).submit();
+		}
 
 	</script>
 

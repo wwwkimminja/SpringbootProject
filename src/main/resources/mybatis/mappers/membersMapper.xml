@@ -41,12 +41,43 @@
 		${count}
 	</select>
 
-	<select id="selectAllMembers" resultType="com.example.rcp.domain.Members">
+	<select id="selectAllMembers"
+		resultType="com.example.rcp.domain.Members">
 		SELECT * FROM members ORDER BY member_id ASC
-		
+
 	</select>
-	
-	
+
+	<update id="update"
+		parameterType="com.example.rcp.domain.Members">
+
+		UPDATE members
+		<set>
+			<if test="memberName != null">
+				member_name = #{memberName},
+			</if>
+			<if test="memberNameHiragana != null">
+				member_name_hiragana = #{memberNameHiragana},
+			</if>
+			<if test="memberPart != null">
+				member_part = #{memberPart},
+			</if>
+			<if test="memberPartHiragana != null">
+				member_part_hiragana = #{memberPartHiragana},
+			</if>
+			<if test="memberTel != null">
+				member_tel = #{memberTel},
+			</if>
+			<if test="memberAuth != null">
+				member_auth = #{memberAuth},
+			</if>
+			<if test="memberModDate != null">
+				member_mod_date = #{memberModDate},
+			</if>
+		</set>
+		WHERE member_id = #{memberId}
+	</update>
+
+
 </mapper>
     
 
